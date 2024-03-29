@@ -1,3 +1,5 @@
+# This is working and tests keycloak authentication(3-legged auth(standard flow) and quick direct access) using flask and docker-compose
+
 import logging
 from uuid import uuid4
 import requests
@@ -33,30 +35,18 @@ app.config["SECRET_KEY"] = str(uuid4())
 
 
 IDP_CONFIG = {
-  "well_known_url": "http://172.27.0.1:8080/realms/master/.well-known/openid-configuration",
+  "well_known_url": "http://192.168.160.1:8080/realms/master/.well-known/openid-configuration",
   "client_id": "account",
-  "client_secret": "NEuQmakWzsV7v0R7rcBA2zYKEfnBgah4",
+  "client_secret": "z0oj3sxJtm3WGeqkxa9d5DwSJWxIUlt2",
   "scope": ["profile", "email", "openid"]
 }
 
-IDP_CONFIG_LOCAL = {
-  "well_known_url": "http://localhost:8080/realms/master/.well-known/openid-configuration",
-  "client_id": "account",
-  "client_secret": "NEuQmakWzsV7v0R7rcBA2zYKEfnBgah4",
-  "scope": ["profile", "email", "openid"]
-}
-
-def get_well_known_metadata_local():
-    logging.info('&requestingggg...'+ IDP_CONFIG_LOCAL["well_known_url"])
-    response = requests.get(IDP_CONFIG_LOCAL["well_known_url"])
-    logging.info('&&&&&&&&&&&&&'+ str(response.json()))
-    response.raise_for_status()
-    return response.json()
+url = "http://192.168.160.1:8080/auth/realms/master/.well-known/openid-configuration"
+url_token = "http://192.168.160.1:8080/auth/realms/master/protocol/openid-connect/token"
 
 def get_well_known_metadata():
-    logging.info('&requestingggg...'+ IDP_CONFIG["well_known_url"])
-    response = requests.get(IDP_CONFIG["well_known_url"])
-    logging.info('&&&&&&&&&&&&&'+ str(response.json()))
+    logging.info('requesting..'+ IDP_CONFIG["well_known_url"])
+    response = requests.get(url)
     response.raise_for_status()
     return response.json()
 
@@ -74,47 +64,36 @@ from flask import redirect, session
 
 @app.route("/login")
 def login():
-    logging.info('Hello, log')
     logging.info('checking.............')
     well_known_metadata = get_well_known_metadata()
-    logging.info('******************', well_known_metadata)
-    oauth2_session = get_oauth2_session()
-    authorization_url, state = oauth2_session.authorization_url(well_known_metadata["authorization_endpoint"])
-    session["oauth_state"] = state
-    return redirect(authorization_url)
-    # return 'dummy'
-
-@app.route("/ll")
-def login_local():
-    logging.info('Hello, local')
-    well_known_metadata = get_well_known_metadata_local()
-    logging.info('******************', well_known_metadata)
+    logging.info('**********well_known_metadata********', well_known_metadata)
     oauth2_session = get_oauth2_session()
     authorization_url, state = oauth2_session.authorization_url(well_known_metadata["authorization_endpoint"])
     session["oauth_state"] = state
     return redirect(authorization_url)
 
-
-IDP_CONFIG_SIGNIN = {
-  "token_endpoint": "http://127.0.0.1:8080/realms/master/protocol/openid-connect/token",
-  "client_id": "account",
-  "client_secret": "NEuQmakWzsV7v0R7rcBA2zYKEfnBgah4",
-  "scope": ["profile", "email", "openid"]
-}
 
 @app.route('/signin')
 def login_sign():
     logging.info('signing.....')
-    resp = requests.post(
-    IDP_CONFIG_SIGNIN["token_endpoint"],
-    data={
-            "client_id": IDP_CONFIG_SIGNIN["client_id"],
-            "username": admin,
-            "password": admin,
-            "grant_type": "password",
-        }
-    )
-    logging.info('&&&&&&&&&&&&&'+ str(resp.json()))
+    try:
+        resp = requests.post(
+        "http://192.168.160.1:8080/auth/realms/master/protocol/openid-connect/token",
+        data={
+                'client_id': 'account',
+                'client_secret': 'z0oj3sxJtm3WGeqkxa9d5DwSJWxIUlt2',
+                "username": "admin",
+                "password": "password",
+                "grant_type": "password",
+                'scope': 'openid',
+            }, 
+            headers = {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        )
+    except requests.exceptions.RequestException as e:
+        logging.info("An error occurred:", e)
+    logging.info( resp)
     resp.raise_for_status()
     return resp.json()
 
@@ -128,7 +107,7 @@ def callback():
                                                         code=request.args["code"])
     app.logger.debug(tok)
     session["id_token"] = tok["id_token"]
-    return "ok"
+    return "<code>"+ session["id_token"] + "</code>"
 
 @app.route("/hello")
 def get_user_token():
