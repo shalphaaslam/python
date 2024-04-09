@@ -1,3 +1,7 @@
+## Flask docker-compose file
+# Keycloak config below is disabled since we are connecting to separate keycloak via configurations in app.py
+# enabling the keycloak config below will launch new keycloak again. This flask app will be launched in a separate docker network
+
 version: "3.1"
 
 services:

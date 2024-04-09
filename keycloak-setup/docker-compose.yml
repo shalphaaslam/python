@@ -1,5 +1,8 @@
 # this is working yaml for connecting to already exisiting timescaledb using env variables.
-# Also, sharing docker common network [ilcs-cloud-backend-sample_backend ]where the timescaledb is present. ensure to test docker network ls and inspect to check two docker containers are in same network
+# ensure to create/check keycloak schema present in configured DB
+# Also, sharing docker common network [ilcs-cloud-backend-sample_backend ] where the timescaledb is present.
+# ensure to test docker network ls and inspect to check two docker containers are in same network
+
 version: "3.7"
 
 services:

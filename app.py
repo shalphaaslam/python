@@ -1,4 +1,7 @@
-# This is working and tests keycloak authentication(3-legged auth(standard flow) and quick direct access) using flask and docker-compose
+# This is working and tests keycloak authentication(3-legged auth(standard flow which is auth code flow)
+# and quick direct access) using flask and docker-compose
+
+# Draft code for test purpose only
 
 import logging
 from uuid import uuid4
@@ -37,12 +40,12 @@ app.config["SECRET_KEY"] = str(uuid4())
 IDP_CONFIG = {
   "well_known_url": "http://192.168.160.1:8080/realms/master/.well-known/openid-configuration",
   "client_id": "account",
-  "client_secret": "z0oj3sxJtm3WGeqkxa9d5DwSJWxIUlt2",
+  "client_secret": "yM9rhIvNLsvCtVYer11U12nfuGqZcHMk",
   "scope": ["profile", "email", "openid"]
 }
 
-url = "http://192.168.160.1:8080/auth/realms/master/.well-known/openid-configuration"
-url_token = "http://192.168.160.1:8080/auth/realms/master/protocol/openid-connect/token"
+url = "http://192.168.0.1:8080/auth/realms/master/.well-known/openid-configuration"
+url_token = "http://192.168.0.1:8080/auth/realms/master/protocol/openid-connect/token"
 
 def get_well_known_metadata():
     logging.info('requesting..'+ IDP_CONFIG["well_known_url"])
@@ -61,7 +64,7 @@ def get_oauth2_session(**kwargs):
 
 from flask import redirect, session
 
-
+# demonstrates standard flow
 @app.route("/login")
 def login():
     logging.info('checking.............')
@@ -73,17 +76,18 @@ def login():
     return redirect(authorization_url)
 
 
+# demonstrates direct access flow
 @app.route('/signin')
 def login_sign():
     logging.info('signing.....')
     try:
         resp = requests.post(
-        "http://192.168.160.1:8080/auth/realms/master/protocol/openid-connect/token",
+        url_token,
         data={
                 'client_id': 'account',
-                'client_secret': 'z0oj3sxJtm3WGeqkxa9d5DwSJWxIUlt2',
+                'client_secret': 'yM9rhIvNLsvCtVYer11U12nfuGqZcHMk',
                 "username": "admin",
-                "password": "password",
+                "password": "admin",
                 "grant_type": "password",
                 'scope': 'openid',
             }, 
