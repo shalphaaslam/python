@@ -28,7 +28,7 @@ services:
 
   keycloakserver:
     image: quay.io/keycloak/keycloak:legacy
-    # command: ["-Dkeycloak.migration.action=import", "-Dkeycloak.migration.provider=singleFile", "-Dkeycloak.migration.strategy=OVERWRITE_EXISTING", "-Dkeycloak.migration.file=/opt/keycloak/data/import/realmsetting.json"]
+    command: ["-Dkeycloak.migration.action=import", "-Dkeycloak.migration.provider=singleFile", "-Dkeycloak.migration.strategy=OVERWRITE_EXISTING", "-Dkeycloak.migration.file=/opt/keycloak/data/import/wicloud.json"]
     environment:
       DB_VENDOR: postgres
       DB_ADDR: ilcs-cloud-db #172.29.0.1
