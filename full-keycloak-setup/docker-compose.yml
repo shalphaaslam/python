@@ -1,0 +1,41 @@
+# Fully working setup of keycloak 24.0.2(latest)
+version: '3'
+
+
+services:
+  keycloak:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment: #for Keycloak version 24.0.2, you should use the KC_ prefix for environment variables. 
+      KC_LOG_LEVEL: info
+      KC_METRICS_ENABLED: 'true'
+      KC_HEALTH_ENABLED: 'true'
+      KC_DB: postgres
+      KC_DB_SCHEMA: keycloak
+      KC_DB_USERNAME: wicloud
+      KC_DB_PASSWORD: 4rts2-fgbtr-asvrs-4663g
+      KC_DB_URL: jdbc:postgresql://ilcs-cloud-db:5432/wicloud
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME_DEBUG: "true"
+      # QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY: "true"
+      # KC_HTTP_PORT: 8080
+      # KC_HTTPS_PORT: 8443
+      KC_PROXY: edge
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: ["start-dev", "-Dkeycloak.migration.action=import", "-Dkeycloak.migration.provider=singleFile", "-Dkeycloak.migration.strategy=OVERWRITE_EXISTING", "-Dkeycloak.migration.file=/opt/keycloak/data/import/wicloud.json", "-Dkeycloak.profile.feature.scripts=enabled", "-Dkeycloak.profile.feature.upload_script=enabled"]
+    ports:
+      - 8080:8080
+    volumes:
+      - ./keycloak-data:/opt/keycloak/data/import
+      - ./keycloak-data/wicloud.json:/opt/keycloak/data/import/wicloud.json
+      - ./policy:/opt/keycloak/providers/
+    networks:
+      - ilcs-cloud-backend-sample_backend
+
+networks:
+  ilcs-cloud-backend-sample_backend:
+    external: true

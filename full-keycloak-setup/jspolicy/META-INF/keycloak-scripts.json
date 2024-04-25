@@ -1,0 +1,9 @@
+{
+    "policies": [
+        {
+            "name": "WicloudPolicy",
+            "fileName": "wicloudpolicy.js",
+            "description": "Custom wicloud Policy for installation resource based authorization using user attributes"
+        }
+    ]
+}
