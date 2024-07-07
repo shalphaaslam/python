@@ -1,4 +1,4 @@
-## This is the keycloak configuration setup for the version 24.0.2(latest)
+# This is the keycloak configuration setup for the version 24.0.2(latest)
 
 Folder - jspolicy
 
@@ -21,6 +21,10 @@ For example: http://localhost:8080/admin/master/console/
 2. cd into the folder /full-keycloak-setup, do sudo docker-compose build
 3. do sudo docker-compose up
 4. keycloak should be up and created its tables in the keycloak schema created above.
+
+### For integrating the keycloak in the python client project, 
+For e.g., https://www.informaticsmatters.com/blog/2021/06/01/installing-keycloak-on-Django-rest-framework.html
+For now, we can continue using mozilla-django-oidc python library for authentication and gradually integrate python-keycloak for authorization. This approach allows you to leverage your existing code while expanding functionality as needed. `python-keycloak` library provides a more comprehensive integration with Keycloak, supporting both authentication and authorization. It allows you to manage users, roles, and permissions directly from your Django application. You can use it alongside mozilla-django-oidc or as a standalone solution.
 
 
 ## To verify whether keycloak uses configured DB:
