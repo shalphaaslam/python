@@ -16,8 +16,15 @@ we can edit it to add, update the configuration of realm
 Note: keycloak Latest version is used 24.0.2 – Url should not include /auth
 For example: http://localhost:8080/admin/master/console/
 
+## To execute and up the keycloak at http://localhost:8080/:
+1. Make sure to create keycloak schema under wicloud
+2. cd into the folder /full-keycloak-setup, do sudo docker-compose build
+3. do sudo docker-compose up
+4. keycloak should be up and created its tables in the keycloak schema created above.
+
+
 ## To verify whether keycloak uses configured DB:
-1. check the schema keycloak is created already in the DB configured in docker-compose.yml
+1. check the schema keycloak is created already in the DB configured in docker-compose.yml. if not, create a schema keycloak under wicloud
 2. After running keycloak, exec "docker exec -it 9c82f7c44a97 /bin/bash"
 3. In bash, exec "/opt/keycloak/bin/kc.sh show-config" 
 It should show the DB configuration imported from docker-compose.yaml. If its "dev-file" instead, then its using inmemory H2 DB.
