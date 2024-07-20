@@ -17,7 +17,7 @@ Note: keycloak Latest version is used 24.0.2 – Url should not include /auth
 For example: http://localhost:8080/admin/master/console/
 
 ## To execute and up the keycloak at http://localhost:8080/:
-1. Make sure to create keycloak schema under wicloud
+1. Make sure check the database is running and create keycloak schema under wicloud.
 2. cd into the folder /full-keycloak-setup, do sudo docker-compose build
 3. do sudo docker-compose up
 4. keycloak should be up and created its tables in the keycloak schema created above.
