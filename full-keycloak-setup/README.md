@@ -26,17 +26,17 @@ For example: http://localhost:8080/admin/master/console/
 For e.g., https://www.informaticsmatters.com/blog/2021/06/01/installing-keycloak-on-Django-rest-framework.html
 For now, we can continue using mozilla-django-oidc python library for authentication and gradually integrate python-keycloak for authorization. This approach allows you to leverage your existing code while expanding functionality as needed. `python-keycloak` library provides a more comprehensive integration with Keycloak, supporting both authentication and authorization. It allows you to manage users, roles, and permissions directly from your Django application. You can use it alongside mozilla-django-oidc or as a standalone solution.
 
-
+Note: Make sure to replace all below-mentioned IP address with your IP address.
 ## To verify whether keycloak uses configured DB:
 1. check the schema keycloak is created already in the DB configured in docker-compose.yml. if not, create a schema keycloak under wicloud
 2. After running keycloak, exec "docker exec -it 9c82f7c44a97 /bin/bash"
 3. In bash, exec "/opt/keycloak/bin/kc.sh show-config" 
 It should show the DB configuration imported from docker-compose.yaml. If its "dev-file" instead, then its using inmemory H2 DB.
 
-## Authorization Services Enablement
-
-### To discover Authorization urls for the keycloak :
+## To discover authorisation URLs for the keycloak running (can be used to configure django settings):
 curl http://192.168.160.1:8080/realms/master/.well-known/openid-configuration
+
+## Authorization Services Enablement
 
 ## Setup steps:
 1. create userProfile attribute in realm settings and enable uma in realm settings(verify that service_account tab has uma_protection). this user attribute can be multi-valued. however, in that case, changes required in our ,custom javascript policy.
@@ -76,7 +76,7 @@ curl -X POST \
  First login with client credential:
 curl -X POST \
     -H "Content-Type: application/x-www-form-urlencoded" \
-    -d 'grant_type=client_credentials&client_id=account&client_secret=NEuQmakWzsV7v0R7rcBA2zYKEfnBgah4' \
+    -d 'grant_type=client_credentials&client_id=account&client_secret=**Eu***BA2zY****gah4' \
     "http://172.26.0.1:8080/realms/master/protocol/openid-connect/token"
  
  and then list the resources like curl below 
