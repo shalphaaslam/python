@@ -1,5 +1,5 @@
 # python
-# This Flask with Keycloak POC tries to set up a keycloak server and client flask app to access keycloak in docker
+# This project has Flask app with Keycloak. This POC tries to set up a keycloak server and client flask app to access keycloak in docker
 
 Under # test folder -> you can run keycloak with a separate postgres DB using the docker-compose file in it both within same docker network.
 
